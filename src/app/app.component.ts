@@ -29,7 +29,7 @@ export class AppComponent {
     });
 
     this.storage.get('storage_xxx').then((res) => {
-      if(res ){
+      if(res == null){
         this.navCtrl.navigateRoot('/login');
       }else{
         this.navCtrl.navigateRoot('/home');

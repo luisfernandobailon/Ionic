@@ -1,9 +1,42 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>register</ion-title>
+<ion-header no-border>
+  <ion-toolbar color="danger">
+    <ion-title>Registro</ion-title>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
 <ion-content>
+  <ion-list>
+    <div class="">
+      <ion-item>
+        <ion-input type="text" placeholder="Su nombre" [(ngModel)]="your_name"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label style="color:#999">Genero</ion-label>
+        <ion-select interface="popover" [(ngModel)]="gender">
+          <ion-select-option value="f">Femenino</ion-select-option>
+          <ion-select-option value="m">Masculino</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <ion-item style="color:#999">
+        <ion-label position="floating">Fecha de nacimiento</ion-label>
+        <ion-datetime displayFormat="YYYY/MM/DD" [(ngModel)]="date_birth" min="1994-03-14" max="2012-12-09" value="2002-09-23T15:03:46.789">
+        </ion-datetime>
+      </ion-item>
+      <ion-item>
+        <ion-input type="text" placeholder="Email" [(ngModel)]="email_address"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-input type="password" placeholder="Password" [(ngModel)]="password"></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-input type="password" placeholder="Confirmar contraseña" [(ngModel)]="confirm_pass"></ion-input>
+      </ion-item>
+
+      <ion-button expand="full" class="no-padding" color="danger" (click)="tryRegister()" [disabled] = "disabledButton">Registrar</ion-button>
+    </div>
+  </ion-list>
 
 </ion-content>

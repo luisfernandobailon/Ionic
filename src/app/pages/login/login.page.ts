@@ -7,8 +7,8 @@ import { Router, ActivatedRoute } from '@angular/router';
   styleUrls: ['./login.page.scss'],
 })
 export class LoginPage implements OnInit {
-  private router: Router
-  constructor() { }
+  
+  constructor(private router: Router) { }
 
   ngOnInit() {
   }

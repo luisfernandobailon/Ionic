@@ -33,7 +33,7 @@ export class RegisterPage implements OnInit {
   ngOnInit() {
   }
 
-  ionViewDinEnter() {
+  ionViewDidEnter() {
     this.disabledButton = false;
   }
   async tryRegister() {
@@ -57,7 +57,7 @@ export class RegisterPage implements OnInit {
       loader.present();
 
       return new Promise(resolve => {
-        let body =  {
+        let body = {
           aksi: 'proses_register',
           your_name: this.your_name,
           gender: this.gender,
@@ -66,7 +66,20 @@ export class RegisterPage implements OnInit {
           password: this.password
         }
         this.accssPrvds.postData(body, 'proses_api.php').subscribe((res: any) => {
-
+          if (res.success == true) {
+            loader.dismiss();
+            this.disabledButton = false;
+            this.presentToast(res.msg);
+            this.router.navigate(['/login']);
+          } else {
+            loader.dismiss();
+            this.disabledButton = false;
+            this.presentToast(res.msg);
+          }
+        }, (err) => {
+          loader.dismiss();
+          this.disabledButton = false;
+          this.presentAlert('Tiempo de espera terminado');
         });
       });
     }
@@ -74,11 +87,35 @@ export class RegisterPage implements OnInit {
 
   async presentToast(a) {
     const toast = await this.toastCtrl.create({
-      message: '',
+      message: a,
       duration: 1500,
-      position: 'top'
+      position: 'top',
+
     });
     toast.present();
+  }
+
+  async presentAlert(a) {
+    const alert = await this.alertCtrl.create({
+      header: a,
+      backdropDismiss: false,
+      buttons: [
+        {
+          text: 'Cerrar',
+          handler: (blah) => {
+            console.log('Confirm Cancel: blah');
+          }
+        }, {
+          text: 'Intentar de nuevo',
+          handler: () => {
+            this.tryRegister();
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+
   }
 
 }

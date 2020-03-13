@@ -51,7 +51,7 @@ if ($postjson['aksi'] == 'proses_register') {
         'id_user'       => $logindata['id_user'],
         'your_name'       => $logindata['your_name'],
         'gender'          => $logindata['gender'],
-        'date_birthday'   => $logindata['date_birth'],
+        'date_birthday'   => $logindata['date_birthday'],
         'email_address'   => $logindata['email_address']
     );
     if ($logindata) {

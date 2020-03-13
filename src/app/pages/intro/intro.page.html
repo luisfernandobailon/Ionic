@@ -1,9 +1,19 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>intro</ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content>
-
+  <ion-slides pager = "true">
+    <ion-slide class = "slide-one">
+      <ion-img src = "/assets/icon/coram.ico"></ion-img>
+      <h1>CoRam</h1>
+      <p class="labelinto">
+        CONTROL DE FRACCIONAMIENTO POR CoRam
+        <span></span>
+      </p>
+    </ion-slide>
+    <ion-slide class = "slide-two">
+      <ion-img src = "/assets/icon/coram.ico"></ion-img>
+      <p class="labelinto">
+        Hola
+      </p>
+      <ion-button color = "danger" (click)="openLogin()">Iniciar sesion....</ion-button>
+    </ion-slide>
+  </ion-slides>
 </ion-content>

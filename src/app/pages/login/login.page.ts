@@ -49,6 +49,7 @@ export class LoginPage implements OnInit {
       return new Promise(resolve => {
         let body = {
           aksi: 'proses_login',
+          email_address: this.email_address,
           password: this.password
 
         }
@@ -57,6 +58,7 @@ export class LoginPage implements OnInit {
             loader.dismiss();
             this.disabledButton = false;
             this.presentToast('Login exitoso');
+            this.storage.set('storage_xxx', res.result);// creacion de sesion storage
             this.navCtrl.navigateRoot(['/home']);
           } else {
             loader.dismiss();
@@ -66,7 +68,7 @@ export class LoginPage implements OnInit {
         }, (err) => {
           loader.dismiss();
           this.disabledButton = false;
-          this.presentAlert('Tiempo de espera terminado');
+          this.presentToast('Tiempo de espera terminado');
         });
       });
     }

@@ -16,7 +16,7 @@ const routes: Routes = [
     loadChildren: () => import('./pages/register/register.module').then( m => m.RegisterPageModule)
   },
   {
-    path: 'crud',
+    path: 'crud/:id',
     loadChildren: () => import('./pages/crud/crud.module').then( m => m.CrudPageModule)
   },
   {

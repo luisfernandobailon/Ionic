@@ -14,6 +14,10 @@ export class HomePage implements OnInit {
   datastorage: any;
   name: String;
 
+  users: any = [];
+  limit: number = 13;
+  start: number = 0;
+
   constructor(
     private router: Router,
     private toastCtrl: ToastController,
@@ -32,9 +36,55 @@ export class HomePage implements OnInit {
       console.log(res);
       this.datastorage = res;
       this.name = this.datastorage.your_name;
+    });
+    this.start = 0;
+    this.users = [];
+    this.loadUsers();
+  }
+
+  async doRefresh(event) {
+    const loader = await this.loadingCtrl.create({
+      message: 'Por favor espere.......',
+    });
+    loader.present();
+    
+    this.ionViewDidEnter();
+    event.target.complete();
+
+    loader.dismiss();
+  }
+
+  loadData(){
+    this.start += this.limit;
+    setTimeout(() =>{
+      this.loadUsers().then(() =>{
+        event.target.complete();
+      });
+    }, 500);
+  }
+
+  async loadUsers() {
+    return new Promise(resolve => {
+      let body = {
+        aksi: 'load_user',
+        start: this.start,
+        limit: this.limit
+
+      }
+      this.accssPrvds.postData(body, 'proses_api.php').subscribe((res: any) => {
+        for (let datas of res.result) { //
+          this.users.push(datas);
+        }
+        resolve(true);
+      });
 
     });
   }
+
+  async delData(){
+    
+  }
+
 
   async prosesLogout() {
     this.storage.clear();
@@ -44,6 +94,10 @@ export class HomePage implements OnInit {
       duration: 1500
     });
     toast.present();
+  }
+
+  openCrud(a) {
+    this.router.navigate(['/crud/' + a]);
   }
 
 }

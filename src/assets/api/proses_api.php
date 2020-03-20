@@ -62,6 +62,32 @@ if ($postjson['aksi'] == 'proses_register') {
 
     
     echo $result;
+} elseif ($postjson['aksi'] == 'load_user') {
+    $data = array();
+
+    $query = mysqli_query($mysqli, "SELECT * from tb_users 
+                                    ORDER BY id_user 
+                                    DESC LIMIT $postjson[start], $postjson[limit]");
+
+    while($rows = mysqli_fetch_array($query)){
+        $data[] = array(
+            'id_user'         => $rows['id_user'],
+            'your_name'       => $rows['your_name'],
+            'gender'          => $rows['gender'],
+            'date_birthday'   => $rows['date_birthday'],
+            'email_address'   => $rows['email_address']
+        );
+    }
+
+    
+    if ($query) {
+        $result = json_encode(array('success' => true, 'result' => $data));
+    } else{
+        $result = json_encode(array('success' => false));
+    }
+
+    
+    echo $result;
 }
 
 ?>

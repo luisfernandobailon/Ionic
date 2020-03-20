@@ -47,17 +47,17 @@ export class HomePage implements OnInit {
       message: 'Por favor espere.......',
     });
     loader.present();
-    
+
     this.ionViewDidEnter();
     event.target.complete();
 
     loader.dismiss();
   }
 
-  loadData(){
+  loadData(event) {
     this.start += this.limit;
-    setTimeout(() =>{
-      this.loadUsers().then(() =>{
+    setTimeout(() => {
+      this.loadUsers().then(() => {
         event.target.complete();
       });
     }, 500);
@@ -81,8 +81,22 @@ export class HomePage implements OnInit {
     });
   }
 
-  async delData(){
-    
+  async delData() {
+    return new Promise(resolve => {
+      let body = {
+        aksi: 'load_user',
+        start: this.start,
+        limit: this.limit
+
+      }
+      this.accssPrvds.postData(body, 'proses_api.php').subscribe((res: any) => {
+        for (let datas of res.result) { //
+          this.users.push(datas);
+        }
+        resolve(true);
+      });
+
+    });
   }
 
 

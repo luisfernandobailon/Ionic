@@ -54,7 +54,7 @@ export class HomePage implements OnInit {
     loader.dismiss();
   }
 
-  loadData(event) {
+  loadData(event:any) {
     this.start += this.limit;
     setTimeout(() => {
       this.loadUsers().then(() => {
@@ -81,22 +81,32 @@ export class HomePage implements OnInit {
     });
   }
 
-  async delData() {
+  async delData(a) {
     return new Promise(resolve => {
       let body = {
-        aksi: 'load_user',
-        start: this.start,
-        limit: this.limit
+        aksi: 'del_user',
+        id: a
 
       }
+
       this.accssPrvds.postData(body, 'proses_api.php').subscribe((res: any) => {
-        for (let datas of res.result) { //
-          this.users.push(datas);
+        if (res.success == true) {
+          this.presentToast('Se elimino');
+          this.ionViewDidEnter();
+        } else {
+          this.presentToast('Ocurrio un error');
         }
-        resolve(true);
       });
 
     });
+  }
+
+  async presentToast(a) {
+    const toast = await this.toastCtrl.create({
+      message: a,
+      duration: 1500
+    });
+    toast.present();
   }
 
 

@@ -1,0 +1,46 @@
+[1mdiff --git a/src/app/pages/home/home.page.ts b/src/app/pages/home/home.page.ts[m
+[1mindex 1111d72..8c743b6 100644[m
+[1m--- a/src/app/pages/home/home.page.ts[m
+[1m+++ b/src/app/pages/home/home.page.ts[m
+[36m@@ -81,24 +81,34 @@[m [mexport class HomePage implements OnInit {[m
+     });[m
+   }[m
+ [m
+[31m-  async delData() {[m
+[32m+[m[32m  async delData(a) {[m
+     return new Promise(resolve => {[m
+       let body = {[m
+[31m-        aksi: 'load_user',[m
+[31m-        start: this.start,[m
+[31m-        limit: this.limit[m
+[32m+[m[32m        aksi: 'del_user',[m
+[32m+[m[32m        id: a[m
+ [m
+       }[m
+[32m+[m
+       this.accssPrvds.postData(body, 'proses_api.php').subscribe((res: any) => {[m
+[31m-        for (let datas of res.result) { //[m
+[31m-          this.users.push(datas);[m
+[32m+[m[32m        if (res.success == true) {[m
+[32m+[m[32m          this.presentToast('Se elimino');[m
+[32m+[m[32m          this.ionViewDidEnter();[m
+[32m+[m[32m        } else {[m
+[32m+[m[32m          this.presentToast('Ocurrio un error');[m
+         }[m
+[31m-        resolve(true);[m
+       });[m
+ [m
+     });[m
+   }[m
+ [m
+[32m+[m[32m  async presentToast(a) {[m
+[32m+[m[32m    const toast = await this.toastCtrl.create({[m
+[32m+[m[32m      message: a,[m
+[32m+[m[32m      duration: 1500[m
+[32m+[m[32m    });[m
+[32m+[m[32m    toast.present();[m
+[32m+[m[32m  }[m
+[32m+[m
+ [m
+   async prosesLogout() {[m
+     this.storage.clear();[m

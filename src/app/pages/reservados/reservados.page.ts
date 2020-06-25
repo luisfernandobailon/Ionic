@@ -1,20 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ToastController, LoadingController, AlertController, NavController, MenuController } from '@ionic/angular';
+import { ToastController, LoadingController, AlertController, NavController } from '@ionic/angular';
 import { AccessProviders } from '../../providers/access-providers';
 import { Storage } from '@ionic/storage';
 
 @Component({
-  selector: 'app-home',
-  templateUrl: './home.page.html',
-  styleUrls: ['./home.page.scss'],
+  selector: 'app-reservados',
+  templateUrl: './reservados.page.html',
+  styleUrls: ['./reservados.page.scss'],
 })
-export class HomePage implements OnInit {
-
+export class ReservadosPage implements OnInit {
   datastorage: any;
   name: String;
 
-  users: any = [];
+  lotes: any = [];
   limit: number = 13;
   start: number = 0;
 
@@ -25,22 +24,22 @@ export class HomePage implements OnInit {
     private alertCtrl: AlertController,
     private accssPrvds: AccessProviders,
     private storage: Storage,
-    public navCtrl: NavController,
-    private menuCtrl: MenuController
+    public navCtrl: NavController
   ) { }
 
   ngOnInit() {
-  }
-
-  ionViewDidEnter() {
     this.storage.get('storage_xxx').then((res) => {
       console.log(res);
       this.datastorage = res;
       this.name = this.datastorage.your_name;
     });
+  }
+  
+  ionViewDidEnter() {
+    
     this.start = 0;
-    this.users = [];
-    this.loadUsers();
+    this.lotes = [];
+    this.cargarLotes();
   }
 
   async doRefresh(event) {
@@ -55,26 +54,27 @@ export class HomePage implements OnInit {
     loader.dismiss();
   }
 
-  loadData(event: any) {
+  loadData(event:any) {
     this.start += this.limit;
     setTimeout(() => {
-      this.loadUsers().then(() => {
+      this.cargarLotes().then(() => {
         event.target.complete();
       });
     }, 500);
   }
 
-  async loadUsers() {
+  async cargarLotes() {
     return new Promise(resolve => {
       let body = {
-        aksi: 'load_user',
+        aksi: 'cargar_lotes_reservados',
         start: this.start,
-        limit: this.limit
+        limit: this.limit,
+        usuario: this.name
 
       }
       this.accssPrvds.postData(body, 'proses_api.php').subscribe((res: any) => {
         for (let datas of res.result) { //
-          this.users.push(datas);
+          this.lotes.push(datas);
         }
         resolve(true);
       });
@@ -82,17 +82,16 @@ export class HomePage implements OnInit {
     });
   }
 
-  async delData(a) {
+  async quitarReservacion(a) {
     return new Promise(resolve => {
       let body = {
-        aksi: 'del_user',
+        aksi: 'quitar_reservado',
         id: a
-
       }
 
       this.accssPrvds.postData(body, 'proses_api.php').subscribe((res: any) => {
         if (res.success == true) {
-          this.presentToast('Se elimino');
+          this.presentToast('Se quito reservacion');
           this.ionViewDidEnter();
         } else {
           this.presentToast('Ocurrio un error');
@@ -110,20 +109,6 @@ export class HomePage implements OnInit {
     toast.present();
   }
 
-
-  async prosesLogout() {
-    this.storage.clear();
-    this.navCtrl.navigateRoot(['/intro']);
-    const toast = await this.toastCtrl.create({
-      message: 'Salio',
-      duration: 1500
-    });
-    toast.present();
-    this.menuCtrl.enable(false, 'main-menu');
-  }
-
-  openCrud(a) {
-    this.router.navigate(['/crud/' + a]);
-  }
+  
 
 }

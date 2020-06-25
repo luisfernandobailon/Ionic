@@ -1,0 +1,24 @@
+<ion-header>
+  <ion-toolbar color="danger">
+    <ion-title>Reservar Lote</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <div class="">
+      <ion-item>
+        <ion-label class="ion-text-wrap">
+          Manzana: {{pre_manzana}}
+          Lote: {{pre_lote}}
+        </ion-label>
+      </ion-item>
+      <ion-item class="textarea1">
+        <ion-label position="floating">Escriba una nota</ion-label>
+        <ion-textarea rows="6" cols="20" type="text" [(ngModel)]="nota"></ion-textarea>
+      </ion-item>
+      <ion-button expand="full" class="no-padding" color="danger" (click)="reservarLote()" [disabled]="disabledButton">
+        Reservar</ion-button>
+    </div>
+  </ion-list>
+</ion-content>

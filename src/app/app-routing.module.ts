@@ -23,6 +23,31 @@ const routes: Routes = [
     path: 'login',
     loadChildren: () => import('./pages/login/login.module').then( m => m.LoginPageModule)
   },
+  {
+    path: 'principal',
+    loadChildren: () => import('./pages/principal/principal.module').then( m => m.PrincipalPageModule)
+  },
+  {
+    path: 'lotes',
+    loadChildren: () => import('./pages/lotes/lotes.module').then( m => m.LotesPageModule)
+  },
+  {
+    path: 'reservar/:id',
+    loadChildren: () => import('./pages/reservar/reservar.module').then( m => m.ReservarPageModule)
+  },  {
+    path: 'reservados',
+    loadChildren: () => import('./pages/reservados/reservados.module').then( m => m.ReservadosPageModule)
+  },
+  {
+    path: 'pagos',
+    loadChildren: () => import('./pages/pagos/pagos.module').then( m => m.PagosPageModule)
+  },
+  {
+    path: 'detalle-pagos',
+    loadChildren: () => import('./pages/detalle-pagos/detalle-pagos.module').then( m => m.DetallePagosPageModule)
+  },
+
+
 ];
 
 @NgModule({

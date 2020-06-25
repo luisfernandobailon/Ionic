@@ -33,7 +33,7 @@
         <ion-input type="password" placeholder="Password" [(ngModel)]="password"></ion-input>
       </ion-item>
 
-      <ion-button expand="full" class="no-padding" *ngIf="id==0" color="danger" (click)="crudAction('Create')" [disabled] = "disabledButton">Submit</ion-button>
+      <ion-button expand="full" class="no-padding" *ngIf="id==0" color="danger" (click)="crudAction('Create')" [disabled] = "disabledButton">Registrar</ion-button>
       <ion-button expand="full" class="no-padding" *ngIf="id!=0" color="danger" (click)="crudAction('Update')" [disabled] = "disabledButton">Modificar</ion-button>
     </div>
 

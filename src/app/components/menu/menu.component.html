@@ -1,0 +1,31 @@
+<ion-menu menuId="main-menu" contentId="main">
+  <ion-content>
+    <div class="menu-header-bg"></div>
+    <div class="header-content">
+      <img src="/assets/icon/LOGO.png" alt="">
+      <ion-label>
+        <h2>VICH</h2>
+        <p>VIVIENDA CHILPANCINGO</p>
+      </ion-label>
+    </div>
+    <!--<div class="action-button">
+      <ion-button (click)="prosesLogout()">
+        <ion-icon slot="start" name="log-out"></ion-icon>Cerrar sesion
+      </ion-button>
+    </div> -->
+
+    <ion-list class="menu-items">
+      <!-- <ion-item class="active">
+        <ion-icon name="person"></ion-icon>Usuarios
+      </ion-item> -->
+      <ion-menu-toggle>
+        <ion-item *ngFor="let c of componentes" detail (click)="redireccionar(c.redirectTo)">
+          <ion-icon [name]="c.icon"></ion-icon>
+          <ion-label>{{c.name}}</ion-label>
+        </ion-item>
+      </ion-menu-toggle>
+
+    </ion-list>
+
+  </ion-content>
+</ion-menu>

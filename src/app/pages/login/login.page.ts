@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ToastController, LoadingController, AlertController, NavController } from '@ionic/angular';
+import { ToastController, LoadingController, AlertController, NavController, MenuController } from '@ionic/angular';
 import { AccessProviders } from '../../providers/access-providers';
 import { Storage } from '@ionic/storage';
 
@@ -23,7 +23,8 @@ export class LoginPage implements OnInit {
     private alertCtrl: AlertController,
     private accssPrvds: AccessProviders,
     private storage: Storage,
-    public navCtrl: NavController
+    public navCtrl: NavController,
+    private menuCtrl: MenuController
   ) { }
 
   ngOnInit() {
@@ -35,7 +36,7 @@ export class LoginPage implements OnInit {
 
 
   async tryLogin() {
-     if (this.email_address == "") {
+    if (this.email_address == "") {
       this.presentToast('EL e-mail es requerido');
     } else if (this.password == "") {
       this.presentToast('La contraseña es requerida');
@@ -60,6 +61,7 @@ export class LoginPage implements OnInit {
             this.presentToast('Login exitoso');
             this.storage.set('storage_xxx', res.result);// creacion de sesion storage
             this.navCtrl.navigateRoot(['/home']);
+            this.menuCtrl.enable(true, 'main-menu');
           } else {
             loader.dismiss();
             this.disabledButton = false;
@@ -84,7 +86,7 @@ export class LoginPage implements OnInit {
     toast.present();
   }
 
-  openRegister(){
+  openRegister() {
     this.router.navigate(['/register']);
   }
 

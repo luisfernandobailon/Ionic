@@ -12,6 +12,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { IonicStorageModule } from '@ionic/storage';
 import { HttpClientModule } from '@angular/common/http';
 import { AccessProviders } from './providers/access-providers';
+import { ComponentsModule } from './components/components.module';
 
 
 @NgModule({
@@ -21,7 +22,8 @@ import { AccessProviders } from './providers/access-providers';
     IonicModule.forRoot(), 
     AppRoutingModule,
     IonicStorageModule.forRoot(), 
-    HttpClientModule
+    HttpClientModule,
+    ComponentsModule
   ],
   providers: [
     StatusBar,

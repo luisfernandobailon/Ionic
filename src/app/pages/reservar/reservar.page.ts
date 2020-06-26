@@ -25,7 +25,6 @@ export class ReservarPage implements OnInit {
     private toastCtrl: ToastController,
     private loadingCtrl: LoadingController,
     private alertCtrl: AlertController,
-    private accssPrvdscargar: AccessProviders,
     private accssPrvds: AccessProviders,
     private actRoute: ActivatedRoute,
     private storage: Storage
@@ -50,13 +49,15 @@ export class ReservarPage implements OnInit {
     this.disabledButton = false;
   }
 
-  async cargarDatos() {
+   cargarDatos() {
+    
     return new Promise(resolve => {
       let body = {
         aksi: 'cargar_datos_predio',
         id: this.id
+        
       }
-      this.accssPrvdscargar.postData(body, 'proses_api.php').subscribe((res: any) => {
+      this.accssPrvds.postData(body, 'proses_api.php').subscribe((res: any) => {
         this.pre_manzana = res.result.pre_manzana;
         this.pre_lote = res.result.pre_lote;
         

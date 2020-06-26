@@ -180,6 +180,230 @@ if ($postjson['aksi'] == 'proses_register') {
 
     
     echo $result;
+}elseif ($postjson['aksi'] == 'cargar_lotes') {
+    $data = array();
+
+    $query = mysqli_query($mysqli2, "SELECT  id_predio, cta_predial, cve_catastral, pre_manzana, pre_lote 
+                                    FROM predio_cat AS tabla1 
+                                    LEFT JOIN enganche_cat AS tabla2 
+                                    ON (tabla1.id_predio = tabla2.idPredio) 
+                                    WHERE tabla2.idPredio is NULL 
+                                    ORDER BY id_predio 
+                                    ASC LIMIT $postjson[start], $postjson[limit]");
+
+    while($rows = mysqli_fetch_array($query)){
+        $data[] = array(
+            'id_predio'         => $rows['id_predio'],
+            'cta_predial'       => $rows['cve_catastral'],
+            'pre_manzana'          => $rows['pre_manzana'],
+            'pre_lote'   => $rows['pre_lote']
+        );
+    }
+
+    if ($query) {
+        $result = json_encode(array('success' => true, 'result' => $data));
+    } else{
+        $result = json_encode(array('success' => false));
+    }
+    echo $result;
+
+}elseif ($postjson['aksi'] == 'cargar_datos_predio') {
+
+    $query = mysqli_query($mysqli2, "SELECT pre_manzana, pre_lote 
+                                    FROM predio_cat 
+                                    WHERE id_predio = '$postjson[id]'");
+
+    while($rows = mysqli_fetch_array($query)){
+        $data = array(
+            'pre_manzana'   => $rows['pre_manzana'],
+            'pre_lote'      => $rows['pre_lote']
+        );
+    }
+
+    if ($query) {
+        $result = json_encode(array('success' => true, 'result' => $data));
+    } else{
+        $result = json_encode(array('success' => false));
+    }
+
+    
+    echo $result;
+}elseif ($postjson['aksi'] == 'reservar_lote'){
+    $apartado = mysqli_fetch_array(mysqli_query($mysqli2, "SELECT idPredio from lotes_reservados_cat
+        where idPredio = '$postjson[id_predio]'"));
+    
+    $contrato = mysqli_fetch_array(mysqli_query($mysqli2, "SELECT idPredio from enganche_cat
+        where idPredio = '$postjson[id_predio]'"));
+
+
+        if ($apartado['idPredio']==$postjson['id_predio']) {
+            $result = json_encode(array('success' => false, 'msg' => 'Este lote ya esta reservado'));
+        }elseif($contrato['idPredio']==$postjson['id_predio']){
+            $result = json_encode(array('success' => false, 'msg' => 'Este lote ya tiene un contrato'));
+        } else {
+
+            
+
+            $insert = mysqli_query($mysqli2, "INSERT INTO lotes_reservados_cat SET 
+                idPredio       = '$postjson[id_predio]',
+                nota          = '$postjson[nota]',
+                usuario_alta      = '$postjson[usuario]',
+                fecha_alta      = '$today'
+                ");
+                if ($insert) {
+                    $result = json_encode(array('success' => true, 'msg' => 'Lote reservado'));
+                } else{
+                    $result = json_encode(array('success' => false, 'msg' => 'Error en el proceso', 'Error' => mysqli_error($mysqli2)));
+                }
+        }
+        echo $result;
+}elseif ($postjson['aksi'] == 'cargar_lotes_reservados') {
+    $data = array();
+
+    $query = mysqli_query($mysqli2, "SELECT  tabla2.id, tabla1.id_predio, tabla1.cta_predial, tabla1.cve_catastral, tabla1.pre_manzana, tabla1.pre_lote 
+                                    FROM predio_cat AS tabla1 
+                                    INNER JOIN lotes_reservados_cat AS tabla2 
+                                    ON (tabla1.id_predio = tabla2.idPredio) 
+                                    WHERE tabla2.usuario_alta = '$postjson[usuario]'
+                                    ORDER BY tabla2.fecha_alta 
+                                    ASC LIMIT $postjson[start], $postjson[limit]");
+
+    while($rows = mysqli_fetch_array($query)){
+        $data[] = array(
+            'id'         => $rows['id'],
+            'cta_predial'       => $rows['cve_catastral'],
+            'pre_manzana'          => $rows['pre_manzana'],
+            'pre_lote'   => $rows['pre_lote']
+        );
+    }
+
+    if ($query) {
+        $result = json_encode(array('success' => true, 'result' => $data));
+    } else{
+        $result = json_encode(array('success' => false));
+    }
+    echo $result;
+
+}elseif ($postjson['aksi'] == 'quitar_reservado') {
+
+    $query = mysqli_query($mysqli2, "DELETE from lotes_reservados_cat
+                                    WHERE 
+                                    id = '$postjson[id]'");
+
+    if ($query) {
+        $result = json_encode(array('success' => true));
+    } else{
+        $result = json_encode(array('success' => false));
+    }
+
+    
+    echo $result;
+}elseif ($postjson['aksi'] == 'cargar_pagos') {
+    $data = array();
+
+    $query = mysqli_query($mysqli2, "SELECT  tabla5.id,tabla1.PrvNombre, tabla2.folio, tabla3.pre_manzana, tabla3.pre_lote, 
+                                    tabla5.total, tabla5.usuario, tabla5.fecha_alta
+                                    FROM proveedores_mpo AS tabla1 
+                                    INNER JOIN enganche_cat AS tabla2 
+                                    ON (tabla1.id_proveedor = tabla2.idProveedor) 
+                                    INNER JOIN predio_cat AS tabla3
+                                    ON (tabla2.idPredio = tabla3.id_predio) 
+                                    INNER JOIN contrato_cat AS tabla4
+                                    ON (tabla2.id = tabla4.idEnganche) 
+                                    INNER JOIN historial_pagos_mensuales_cat AS tabla5
+                                    ON (tabla4.id = tabla5.idContrato) 
+                                    ORDER BY tabla5.id 
+                                    DESC LIMIT $postjson[start], $postjson[limit]");
+
+    while($rows = mysqli_fetch_array($query)){
+        
+        $data[] = array(
+            'id'            => $rows['id'],
+            'PrvNombre'   => $rows['PrvNombre'],
+            'pre_manzana'          => $rows['pre_manzana'],
+            'pre_lote'   => $rows['pre_lote'],
+            'total'  => number_format((float)$rows['total'], 2, '.', ''),  //Esto se hace para formatear a 2 digitos
+            'usuario' => $rows['usuario'],
+            'fecha_alta'  => date_format(date_create($rows['fecha_alta']) , 'd/m/Y H:i:s')
+        );
+    }
+
+    if ($query) {
+        $result = json_encode(array('success' => true, 'result' => $data));
+    } else{
+        $result = json_encode(array('success' => false));
+    }
+    echo $result;
+
+}elseif ($postjson['aksi'] == 'cargar_pago') {
+   
+
+    $query = mysqli_query($mysqli2, "SELECT  tabla5.id,tabla1.PrvNombre, tabla3.pre_manzana, tabla3.pre_lote, 
+                                    tabla5.total, tabla5.fecha_alta, tabla5.concepto
+                                    FROM proveedores_mpo AS tabla1 
+                                    INNER JOIN enganche_cat AS tabla2 
+                                    ON (tabla1.id_proveedor = tabla2.idProveedor) 
+                                    INNER JOIN predio_cat AS tabla3
+                                    ON (tabla2.idPredio = tabla3.id_predio) 
+                                    INNER JOIN contrato_cat AS tabla4
+                                    ON (tabla2.id = tabla4.idEnganche) 
+                                    INNER JOIN historial_pagos_mensuales_cat AS tabla5
+                                    ON (tabla4.id = tabla5.idContrato) 
+                                    WHERE tabla5.id = '$postjson[id]'");
+
+    while($rows = mysqli_fetch_array($query)){
+        
+        $data = array(
+            'id'            => $rows['id'],
+            'PrvNombre'   => $rows['PrvNombre'],
+            'pre_manzana'          => $rows['pre_manzana'],
+            'pre_lote'   => $rows['pre_lote'],
+            'total'  => number_format((float)$rows['total'], 2, '.', ''),  //Esto se hace para formatear a 2 digitos
+            'fecha_alta'  => date_format(date_create($rows['fecha_alta']) , 'd/m/Y H:i:s') ,
+            'concepto' => $rows['concepto']
+        );
+    }
+
+    if ($query) {
+        $result = json_encode(array('success' => true, 'result' => $data));
+    } else{
+        $result = json_encode(array('success' => false));
+    }
+    echo $result;
+
+}elseif ($postjson['aksi'] == 'cargar_detalle_pago') {
+    $data = array();
+
+    $query = mysqli_query($mysqli2, "SELECT  tabla6.numeroMensualidad,tabla6.recargo, tabla6.subtotal
+                                    FROM proveedores_mpo AS tabla1 
+                                    INNER JOIN enganche_cat AS tabla2 
+                                    ON (tabla1.id_proveedor = tabla2.idProveedor) 
+                                    INNER JOIN predio_cat AS tabla3
+                                    ON (tabla2.idPredio = tabla3.id_predio) 
+                                    INNER JOIN contrato_cat AS tabla4
+                                    ON (tabla2.id = tabla4.idEnganche) 
+                                    INNER JOIN historial_pagos_mensuales_cat AS tabla5
+                                    ON (tabla4.id = tabla5.idContrato) 
+                                    INNER JOIN detalle_historial_pagos_mensuales_cat as tabla6
+                                    ON (tabla5.id = tabla6.idHistorial)
+                                    WHERE tabla5.id = '$postjson[id]'");
+
+    while($rows = mysqli_fetch_array($query)){
+        
+        $data[] = array(
+            'numeroMensualidad'            => $rows['numeroMensualidad'],
+            'recargo'   => $rows['recargo'],
+            'subtotal'  => number_format((float)$rows['subtotal'], 2, '.', '')  //Esto se hace para formatear a 2 digitos
+        );
+    }
+
+    if ($query) {
+        $result = json_encode(array('success' => true, 'result' => $data));
+    } else{
+        $result = json_encode(array('success' => false));
+    }
+    echo $result;
+
 }
 
 ?>

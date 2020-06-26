@@ -34,7 +34,8 @@ const routes: Routes = [
   {
     path: 'reservar/:id',
     loadChildren: () => import('./pages/reservar/reservar.module').then( m => m.ReservarPageModule)
-  },  {
+  },
+  {
     path: 'reservados',
     loadChildren: () => import('./pages/reservados/reservados.module').then( m => m.ReservadosPageModule)
   },
@@ -43,7 +44,7 @@ const routes: Routes = [
     loadChildren: () => import('./pages/pagos/pagos.module').then( m => m.PagosPageModule)
   },
   {
-    path: 'detalle-pagos',
+    path: 'detalle-pagos/:id',
     loadChildren: () => import('./pages/detalle-pagos/detalle-pagos.module').then( m => m.DetallePagosPageModule)
   },
 

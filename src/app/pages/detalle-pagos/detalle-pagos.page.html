@@ -1,9 +1,130 @@
-<ion-header>
-  <ion-toolbar>
-    <ion-title>detallePagos</ion-title>
+<ion-header no-border>
+  <ion-toolbar color="danger">
+    <ion-title>Pagos</ion-title>
+    <ion-buttons slot="start">
+      <ion-menu-button menu="main-menu"></ion-menu-button>
+    </ion-buttons>
+
   </ion-toolbar>
 </ion-header>
-
 <ion-content>
 
+  <ion-refresher slot="fixed" (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content pullingIcon="arrow-dropdown"></ion-refresher-content>
+  </ion-refresher>
+
+  <ion-list>
+    <ion-item>
+      <ion-grid>
+        <ion-row class="ion-align-items-center" size="auto">
+          <ion-col>
+            <ion-label>
+              <h3 class="ion-text-center">No. Recibo:</h3>
+            </ion-label>
+          </ion-col>
+          <ion-col>
+            <ion-label>
+              <p class="ion-text-center">{{numero_recibo}}</p>
+            </ion-label>
+          </ion-col>
+        </ion-row>
+        <ion-row size="auto">
+          <ion-col>
+            <ion-label>
+              <h3>Nombre:</h3>
+            </ion-label>
+          </ion-col>
+          <ion-col>
+            <ion-label>
+              <p>{{nombre}}</p>
+            </ion-label>
+          </ion-col>
+        </ion-row>
+        <ion-row size="auto">
+          <ion-col>
+            <ion-label>
+              <h3>Manzana:</h3>
+            </ion-label>
+          </ion-col>
+          <ion-col>
+            <ion-label>
+              <p>{{manzana}}</p>
+            </ion-label>
+          </ion-col>
+          <ion-col>
+            <ion-label>
+              <h3>Lote:</h3>
+            </ion-label>
+          </ion-col>
+          <ion-col>
+            <ion-label>
+              <p>{{lote}}</p>
+            </ion-label>
+          </ion-col>
+        </ion-row>
+        <ion-row size="auto">
+          <ion-col>
+            <ion-label class="ion-text-wrap">
+              <h3>Concepto:</h3>
+              <p>{{concepto}}</p>
+            </ion-label>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+
+    <ion-item>
+      <!--Encabezado del detalle-->
+      <ion-grid>
+        <ion-row class="ion-align-items-center" size="auto">
+          <ion-col>
+            <ion-label>
+              <h3 class="ion-text-center">Mensualidad</h3>
+            </ion-label>
+          </ion-col>
+          <ion-col>
+            <ion-label>
+              <h3 class="ion-text-center">subtotal</h3>
+            </ion-label>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+    <ion-item *ngFor="let pago of pagos">
+      <!--Aqui se recorre todo el detalle-->
+      <ion-grid>
+
+        <ion-row class="ion-align-items-center" size="auto">
+          <ion-col>
+            <ion-label>
+              <p class="ion-text-center" *ngIf="pago.numeroMensualidad != 0">Mensualidad {{pago.numeroMensualidad}}</p>
+              <p class="ion-text-center" *ngIf="pago.numeroMensualidad == 0">Descuento</p>
+            </ion-label>
+          </ion-col>
+          <ion-col>
+            <ion-label>
+              <p class="ion-text-center">${{pago.subtotal}}</p>
+            </ion-label>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+    <ion-item> <!--Aqui se muestra el total-->
+      <ion-grid>
+        <ion-row class="ion-align-items-center" size="auto">
+          <ion-col>
+            <ion-label>
+              <h3 class="ion-text-center">Total:</h3>
+            </ion-label>
+          </ion-col>
+          <ion-col>
+            <ion-label>
+              <p class="ion-text-center">${{total}}</p>
+            </ion-label>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+
+  </ion-list>
 </ion-content>
